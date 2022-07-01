@@ -2,6 +2,7 @@ package pro.ftnl.qpointsApi
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import pro.ftnl.qpointsApi.Configuration.DatabaseConfig
 import java.io.File
 
 /**

@@ -11,7 +11,7 @@ import pro.ftnl.qpointsApi.core.web.PermRoutes
 fun Route.permPost(
     path: String,
     vararg permissions: AccessToken.EPermission,
-    body: PipelineInterceptor<Unit, ApplicationCall>
+    body: PipelineInterceptor<Unit, ApplicationCall>,
 ): Route {
     val route = post(path, body)
     PermRoutes.routesPerms[route] = permissions.toList()
@@ -21,7 +21,7 @@ fun Route.permPost(
 fun Route.permGet(
     path: String,
     vararg permissions: AccessToken.EPermission,
-    body: PipelineInterceptor<Unit, ApplicationCall>
+    body: PipelineInterceptor<Unit, ApplicationCall>,
 ): Route {
     val route = get(path, body)
     println(route.toString())
@@ -32,7 +32,7 @@ fun Route.permGet(
 fun Route.permPatch(
     path: String,
     vararg permissions: AccessToken.EPermission,
-    body: PipelineInterceptor<Unit, ApplicationCall>
+    body: PipelineInterceptor<Unit, ApplicationCall>,
 ): Route {
     val route = patch(path, body)
     println(route.toString())
@@ -43,7 +43,7 @@ fun Route.permPatch(
 fun Route.permDelete(
     path: String,
     vararg permissions: AccessToken.EPermission,
-    body: PipelineInterceptor<Unit, ApplicationCall>
+    body: PipelineInterceptor<Unit, ApplicationCall>,
 ): Route {
     val route = delete(path, body)
     println(route.toString())
@@ -54,7 +54,7 @@ fun Route.permDelete(
 fun Route.permRoute(
     path: String,
     vararg permissions: AccessToken.EPermission,
-    build: Route.() -> Unit
+    build: Route.() -> Unit,
 ): Route {
     val route = route(path, build)
     println(route.toString())
@@ -62,4 +62,5 @@ fun Route.permRoute(
     return route
 }
 
-fun ApplicationCall.toRoutePerm(): Route? = PermRoutes.routesPerms.map { it.key }.find { it.toString().contains("${request.uri}/(method:") }
+fun ApplicationCall.toRoutePerm(): Route? =
+    PermRoutes.routesPerms.map { it.key }.find { it.toString().contains("${request.uri}/(method:") }

@@ -192,7 +192,7 @@ data class User(
             }
         }
 
-        fun getAll(): List<User>  {
+        fun getAll(): List<User> {
             return transaction {
                 Users.selectAll().orderBy(qpoints, SortOrder.DESC).map { fromRaw(it) }
             }
@@ -226,7 +226,7 @@ data class User(
                         QpointsTransactions.insert {
                             it[from] = 0
                             it[to] = user.id
-                            it[amount] = toAdd.toInt()
+                            it[amount] = toAdd
                         }
                     } else {
                         val id = Users.insert {
@@ -237,7 +237,7 @@ data class User(
                         QpointsTransactions.insert {
                             it[from] = 0
                             it[to] = id
-                            it[amount] = user.qpoints.toInt()
+                            it[amount] = user.qpoints
                         }
                     }
                 }

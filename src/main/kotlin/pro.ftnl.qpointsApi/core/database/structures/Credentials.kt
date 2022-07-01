@@ -68,7 +68,7 @@ data class AccessToken(
 
             fun fromInt(permissions: Int): List<EPermission> {
                 val list = mutableListOf<EPermission>()
-                values().forEach{ if ((permissions and (1 shl it.bits)) == (1 shl it.bits)) list.add(it) }
+                values().forEach { if ((permissions and (1 shl it.bits)) == (1 shl it.bits)) list.add(it) }
                 return list
             }
         }
@@ -143,7 +143,7 @@ data class AccessToken(
         /**
          * Get an access_token from the database.
          *
-         * @param token [String] The token to get.
+         * @param user [User] The token to get.
          * @return [AccessToken] The access_token.
          */
         fun getByUser(user: User): AccessToken? {

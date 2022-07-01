@@ -47,7 +47,7 @@ data class QpointsTransaction(
     val to: User,
     val amount: Int,
     val createdAt: DateTime,
-    val reason: String? = null
+    val reason: String? = null,
 ) {
     companion object {
 
