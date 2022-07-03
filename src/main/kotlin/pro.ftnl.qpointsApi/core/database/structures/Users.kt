@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
 import pro.ftnl.qpointsApi.CONFIG
 import pro.ftnl.qpointsApi.core.database.structures.Users.discordId
 import pro.ftnl.qpointsApi.core.database.structures.Users.id
@@ -41,17 +42,26 @@ data class User(
     val twitchId: String? = null,
     var discordId: String? = null,
     var qpoints: Int,
+    val transactions: List<QpointsTransaction>? = null
 ) {
+    fun withTransactions(after: DateTime = DateTime.parse("03/05/2021")): User {
+        return copy(transactions = transaction {
+            QpointsTransactions.select(
+                QpointsTransactions.id eq this@User.id
+                        and(QpointsTransactions.transactionAt greaterEq after))
+                .map { QpointsTransaction.fromRaw(it) }
+        })
+    }
 
     /**
      * Add qpoints to user from System
      */
-    fun addQpoints(qpoints: Int, reason: String? = null) = transfertQpoints(-qpoints, getSystemUser(), reason)
+    fun addQpoints(qpoints: Int, reason: String? = null) = transferPoints(-qpoints, getSystemUser(), reason)
 
     /**
      * Remove qpoints to user from System
      */
-    fun removeQpoints(qpoints: Int, reason: String? = null) = transfertQpoints(qpoints, getSystemUser(), reason)
+    fun removeQpoints(qpoints: Int, reason: String? = null) = transferPoints(qpoints, getSystemUser(), reason)
 
 
     /**
@@ -78,7 +88,7 @@ data class User(
      * @param amount [Int] The amount of qpoints to transfer.
      * @param user [User] The user to transfer qpoints to.
      */
-    fun transfertQpoints(amount: Int, user: User, reason: String?) {
+    fun transferPoints(amount: Int, user: User, reason: String?) {
         this.applyRemoveQpoints(amount)
         user.applyAddQpoints(amount)
         QpointsTransaction.create(this, user, amount, reason)
@@ -93,7 +103,7 @@ data class User(
         if (user == this) return false
 
         discordId = user.discordId
-        transfertQpoints(user.qpoints, user, "Link discord to twitch user")
+        user.transferPoints(user.qpoints, this, "Link discord to twitch user")
         user.delete()
 
         update()

@@ -6,6 +6,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.joda.time.DateTime
 import pro.ftnl.qpointsApi.core.database.structures.AccessToken
 import pro.ftnl.qpointsApi.core.database.structures.User
 import pro.ftnl.qpointsApi.core.permDelete
@@ -77,7 +78,7 @@ fun Application.configureRouting() {
                                 )
                             val dbUser1 = User.getByDiscord(user1)
                             val dbUser2 = User.getByDiscord(user2)
-                            dbUser1.transfertQpoints(qpoints, dbUser2, "Transfert qpoints beetween two users")
+                            dbUser1.transferPoints(qpoints, dbUser2, "Transfert qpoints beetween two users")
                             call.respond(listOf(dbUser1, dbUser2))
                         }
 
@@ -142,7 +143,7 @@ fun Application.configureRouting() {
                                 )
                             val dbUser1 = User.getByTwitch(user1)
                             val dbUser2 = User.getByTwitch(user2)
-                            dbUser1.transfertQpoints(qpoints, dbUser2, "Transfert qpoints beetween two users")
+                            dbUser1.transferPoints(qpoints, dbUser2, "Transfert qpoints beetween two users")
                             call.respond(listOf(dbUser1, dbUser2))
                         }
 
