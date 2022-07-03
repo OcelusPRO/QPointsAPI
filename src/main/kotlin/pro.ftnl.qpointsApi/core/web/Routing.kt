@@ -91,7 +91,8 @@ fun Application.configureRouting() {
                                 "Discord User is required"
                             )
                             val dbUser = User.getByDiscord(user)
-                            call.respond(dbUser)
+                            val date = DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay()
+                            call.respond(dbUser.withTransactions(date))
                         }
 
                     }
@@ -156,7 +157,8 @@ fun Application.configureRouting() {
                                 "Twitch User is required"
                             )
                             val dbUser = User.getByTwitch(user)
-                            call.respond(dbUser)
+                            val date = DateTime.now().withDayOfMonth(1).withTimeAtStartOfDay()
+                            call.respond(dbUser.withTransactions(date))
                         }
 
                     }
