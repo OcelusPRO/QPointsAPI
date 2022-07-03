@@ -1,6 +1,8 @@
 package pro.ftnl.qpointsApi.core.database.structures
 
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.greaterEq
 import org.jetbrains.exposed.sql.transactions.transaction
 import pro.ftnl.qpointsApi.CONFIG
 import pro.ftnl.qpointsApi.core.database.structures.Users.discordId
@@ -21,6 +23,7 @@ object Users : Table("${CONFIG.dbConfig.prefix}users") {
     val twitchId = varchar("twitch_id", 15).nullable().default(null)
     val discordId = varchar("discord_id", 25).nullable().default(null)
     val qpoints = integer("qpoints").default(0)
+    val active = bool("active").default(true)
 
     override val primaryKey = PrimaryKey(id, name = "id")
 }
@@ -112,7 +115,11 @@ data class User(
     /**
      * Delete the user from the database.
      */
-    private fun delete() = transaction { Users.deleteWhere { Users.id eq this@User.id } }
+    private fun delete() = transaction {
+        Users.update({Users.id eq this@User.id}) {
+            Users.active to false
+        }
+    }
 
 
     companion object {
@@ -154,7 +161,7 @@ data class User(
          */
         private fun getValue(id: String, column: Column<String?>): User {
             return transaction {
-                var user = Users.select { column eq id }.firstOrNull()?.let { fromRaw(it) }
+                var user = Users.select { column eq id and(Users.active eq true) }.firstOrNull()?.let { fromRaw(it) }
                 if (user == null) user = createUser(id, column)
                 return@transaction user
             }
@@ -173,7 +180,7 @@ data class User(
         /**
          * Get a user from the database by id.
          */
-        fun getById(id: Int): User? = transaction { Users.select { Users.id eq id }.map { fromRaw(it) }.firstOrNull() }
+        fun getById(id: Int): User? = transaction { Users.select { Users.id eq id and(Users.active eq true) }.map { fromRaw(it) }.firstOrNull() }
 
         /**
          * get System user.
@@ -188,7 +195,7 @@ data class User(
          */
         fun getTop10(): List<User> {
             return transaction {
-                Users.selectAll().orderBy(qpoints, SortOrder.DESC).limit(10).map { fromRaw(it) }
+                Users.select(Users.active eq true ).orderBy(qpoints, SortOrder.DESC).limit(10).map { fromRaw(it) }
             }
         }
 
@@ -214,7 +221,7 @@ data class User(
         fun bulkUpdateQpoints(users: List<User>) {
             transaction {
                 val currentUsers =
-                    Users.select { Users.id inList users.map { it.id } }.filterNotNull().map { fromRaw(it) }
+                    Users.select { Users.id inList users.map { it.id }  and(Users.active eq true) }.filterNotNull().map { fromRaw(it) }
                 users.forEach { user ->
                     if (currentUsers.map { it.id }.contains(user.id)) {
                         val toAdd = user.qpoints - currentUsers.first { it.id == user.id }.qpoints
