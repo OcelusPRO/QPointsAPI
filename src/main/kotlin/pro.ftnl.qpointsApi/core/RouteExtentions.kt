@@ -7,17 +7,6 @@ import io.ktor.util.pipeline.*
 import pro.ftnl.qpointsApi.core.database.structures.AccessToken
 import pro.ftnl.qpointsApi.core.web.PermRoutes
 
-
-fun Route.permPost(
-    path: String,
-    vararg permissions: AccessToken.EPermission,
-    body: PipelineInterceptor<Unit, ApplicationCall>,
-): Route {
-    val route = post(path, body)
-    PermRoutes.routesPerms[route] = permissions.toList()
-    return route
-}
-
 fun Route.permGet(
     path: String,
     vararg permissions: AccessToken.EPermission,

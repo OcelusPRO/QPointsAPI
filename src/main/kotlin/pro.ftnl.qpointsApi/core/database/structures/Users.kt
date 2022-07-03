@@ -53,16 +53,6 @@ data class User(
         })
     }
 
-    /**
-     * Add qpoints to user from System
-     */
-    fun addQpoints(qpoints: Int, reason: String? = null) = transferPoints(-qpoints, getSystemUser(), reason)
-
-    /**
-     * Remove qpoints to user from System
-     */
-    fun removeQpoints(qpoints: Int, reason: String? = null) = transferPoints(qpoints, getSystemUser(), reason)
-
 
     /**
      * add qpoints to the user.
@@ -83,7 +73,7 @@ data class User(
     }
 
     /**
-     * Transfert qpoints from current user to another.
+     * Transfer qpoints from current user to another.
      *
      * @param amount [Int] The amount of qpoints to transfer.
      * @param user [User] The user to transfer qpoints to.
@@ -127,7 +117,7 @@ data class User(
      */
     private fun delete() = transaction {
         Users.update({Users.id eq this@User.id}) {
-            Users.active to false
+            active to false
         }
     }
 

@@ -17,7 +17,7 @@ import pro.ftnl.qpointsApi.core.permRoute
 fun Application.configureRouting() {
     routing {
 
-        // Des routes pas trop utile, mais leur innutilité cause leur absolue nécessité !
+        // Des routes pas trop utiles, mais leur inutilité cause leur absolue nécessité !
         get("") {
             call.respondText(
                 """<h1>Coming soon !</h1><p>The site is currently under construction, so <a href='/make-coffee'>grab a coffee</a>!</p>""".trimIndent(),
@@ -78,7 +78,7 @@ fun Application.configureRouting() {
                                 )
                             val dbUser1 = User.getByDiscord(user1)
                             val dbUser2 = User.getByDiscord(user2)
-                            dbUser1.transferPoints(qpoints, dbUser2, "Transfert qpoints beetween two users")
+                            dbUser1.transferPoints(qpoints, dbUser2, "Transfert qpoints between two users")
                             call.respond(listOf(dbUser1, dbUser2))
                         }
 
@@ -144,7 +144,7 @@ fun Application.configureRouting() {
                                 )
                             val dbUser1 = User.getByTwitch(user1)
                             val dbUser2 = User.getByTwitch(user2)
-                            dbUser1.transferPoints(qpoints, dbUser2, "Transfert qpoints beetween two users")
+                            dbUser1.transferPoints(qpoints, dbUser2, "Transfert qpoints between two users")
                             call.respond(listOf(dbUser1, dbUser2))
                         }
 

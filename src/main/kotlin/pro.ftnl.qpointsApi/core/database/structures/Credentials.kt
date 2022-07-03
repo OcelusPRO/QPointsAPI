@@ -74,7 +74,7 @@ data class AccessToken(
         }
     }
 
-
+/*
     fun addPermission(vararg permission: EPermission) {
         permission.forEach { permissions = permissions or (1 shl it.bits) }
         update()
@@ -84,11 +84,11 @@ data class AccessToken(
         permission.forEach { permissions = permissions and (1 shl it.bits).inv() }
         update()
     }
-
-    fun hasPermission(permission: Int) = permissions and (1 shl permission) == (1 shl permission)
+*/
+    private fun hasPermission(permission: Int) = permissions and (1 shl permission) == (1 shl permission)
     fun hasPermission(permission: EPermission) = hasPermission(permission.bits)
 
-
+/*
     /**
      * Update access token in database.
      */
@@ -100,10 +100,13 @@ data class AccessToken(
         }
     }
 
+
+
     /**
      * Delete access token from database.
      */
     fun delete() = transaction { AccessTokens.deleteWhere { AccessTokens.id eq this@AccessToken.id } }
+ */
 
     companion object {
         private val cache = Cache.Builder().expireAfterWrite(30.minutes).build<User, AccessToken>()

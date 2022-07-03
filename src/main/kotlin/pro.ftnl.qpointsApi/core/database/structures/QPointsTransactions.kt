@@ -61,7 +61,7 @@ data class QpointsTransaction(
                 reason = raw[reason]
             )
         }
-
+/*
         fun getById(id: Int) = transaction {
             QpointsTransactions.select { QpointsTransactions.id eq id }.map { fromRaw(it) }.firstOrNull()
         }
@@ -86,7 +86,7 @@ data class QpointsTransaction(
                     transactionAt greaterEq limit and (from eq user.id or (to eq user.id))
                 }.map { fromRaw(it) }.toList()
             }
-
+*/
 
         /**
          * Create a new transaction.
